@@ -50,36 +50,32 @@
 
 ;; Theme
 (use-package doom-themes
-  :config (load-theme 'spacegray t))
+  :config (load-theme 'doom-outrun-electric t))
 
 ;; Open dired in same buffer
 (put 'dired-find-alternate-file 'disabled nil)
 
-;; Sort Dired buffers
+;; Sort directories first
 (setq dired-listing-switches "-agho --group-directories-first")
 
-;; Copy and move files netween dired buffers
+;; Copy and move files between dired buffers
 (setq dired-dwim-target t)
 
 ;; Only y/n answers 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
-;; Move deleted files to trash
+;; Deleted files to trash
 (setq delete-by-moving-to-trash t)
 
-;; Keep folders clean (create new directory when not yet existing)
+;; Keep clean (create new directory if not exist)
 (make-directory (expand-file-name "backups/" user-emacs-directory) t)
 (setq backup-directory-alist `(("." . ,(expand-file-name "backups/" user-emacs-directory))))
 
-;; Define external image viewer/editor
-(setq image-dired-external-viewer "/usr/bin/gimp")
 
-;; Image-dired Keyboard shortcuts
-(with-eval-after-load 'dired
-    (define-key dired-mode-map (kbd "C-t C-d") 'image-dired)
-    (define-key dired-mode-map (kbd "C-<return>") 'image-dired-dired-display-external))
 
-;; Helm configuration
+
+
+;; Helm 
   (use-package helm
     :config
     (require 'helm-config)
@@ -96,7 +92,8 @@
      ("C-z" . helm-select-action)
      ("<tab>" . helm-execute-persistent-action)))
 
-;; Auto completion
+
+;; Auto complete
 (use-package company
   :config
   (setq company-idle-delay 0
@@ -104,6 +101,7 @@
         company-selection-wrap-around t))
 (global-company-mode)
 
+;; which-key
 (use-package which-key
   :config
   (which-key-mode)
@@ -113,19 +111,20 @@
 
 ;; Sensible line breaking
 (add-hook 'text-mode-hook 'visual-line-mode)
+
 ;; Overwrite selected text
 (delete-selection-mode t)
+
 ;; Scroll to the first and last line of the buffer
 (setq scroll-error-top-bottom t)
 
-;; Org-Mode initial setup
+;; Org-Mode
 (use-package org
   :bind
   (("C-c l" . org-store-link)
-   ("C-c a" . org-agenda)
    ("C-c c" . org-capture)))
 
-;; Spell checking
 
+(message "Init Loaded!")
 (provide 'init)
 ;;; init.el ends here
