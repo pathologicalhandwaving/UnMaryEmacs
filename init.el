@@ -124,6 +124,61 @@
   (("C-c l" . org-store-link)
    ("C-c c" . org-capture)))
 
+;; Startup
+(setq org-startup-indented t
+      org-pretty-entities t
+      org-hide-emphasis-markers t
+      org-startup-with-inline-images t
+      org-image-actual-width '(300))
+
+;; Show hidden emphasis markers
+(use-package org-appear
+  :hook (org-mode . org-appear-mode))
+
+;; Bullets
+(use-package org-superstar
+    :config
+    (setq org-superstar-special-todo-items t)
+    (add-hook 'org-mode-hook (lambda ()
+                               (org-superstar-mode 1))))
+
+;; Line spacing
+(setq-default line-spacing 6)
+
+;; LaTeX
+
+
+;; LaTeX fragment previews
+(plist-put org-format-latex-options :scale 2)
+
+;; BibTeX
+
+;; FIXME
+(setq bib-files-directory (directory-files
+                           (concat (getenv "HOME") "/Documents/bibliography") t
+                           "^[A-Z|a-z].+.bib$")
+      pdf-files-directory (concat (getenv "HOME") "/Documents/pdf"))
+
+
+(use-package helm-bibtex
+  :config
+  (require 'helm-config)
+  (setq bibtex-completion-bibliography bib-files-directory
+        bibtex-completion-library-path pdf-files-directory
+        bibtex-completion-pdf-field "File"
+        bibtex-completion-notes-path org-directory))
+
+(use-package org-ref
+  :config
+  (setq org-ref-completion-library 'org-ref-helm-cite
+        org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
+        org-ref-default-bibliography bib-files-directory
+        org-ref-notes-directory org-directory
+        org-ref-notes-function 'orb-edit-notes))
+
+
+
+
 
 (message "Init Loaded!")
 (provide 'init)
