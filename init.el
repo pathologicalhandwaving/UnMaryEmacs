@@ -46,6 +46,7 @@
 
 ;; git
 (use-package git)
+(use-package git-commit)
 
 ;; el-get
 (use-package el-get
@@ -56,6 +57,10 @@
 ;; server
 (require 'server)
 (if (not (server-running-p)) (server-start))
+
+;; shell variables
+(use-package exec-path-from-shell)
+(require 'exec-path-from-shell)
 
 
 ;; Bars
@@ -85,6 +90,11 @@
 ;; Theme
 (use-package doom-themes
   :config (load-theme 'doom-outrun-electric t))
+
+
+;; icons
+(use-package all-the-icons
+  :ensure t)
 
 ;; delimiters
 (use-package rainbow-delimiters
