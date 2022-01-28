@@ -1,4 +1,4 @@
-;;; init.el --- a simple package                     -*- lexical-binding: t; -*-
+;;; init.el --- UnMary Emacs package                     -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2022 UnMary
 
@@ -33,6 +33,7 @@
 ;; Package Archives
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/") t)
 (package-initialize)
 
 ;; use-package
@@ -44,8 +45,8 @@
 
 ;; Bars
 (setq inhibit-startup-message t)
-(tool-bar-mode +1)
-(menu-bar-mode -1)
+(tool-bar-mode -1)
+(menu-bar-mode +1)
 (scroll-bar-mode -1)
 
 ;; Theme
@@ -153,28 +154,6 @@
 
 ;; BibTeX
 
-;; FIXME
-(setq bib-files-directory (directory-files
-                           (concat (getenv "HOME") "/Documents/bibliography") t
-                           "^[A-Z|a-z].+.bib$")
-      pdf-files-directory (concat (getenv "HOME") "/Documents/pdf"))
-
-
-(use-package helm-bibtex
-  :config
-  (require 'helm-config)
-  (setq bibtex-completion-bibliography bib-files-directory
-        bibtex-completion-library-path pdf-files-directory
-        bibtex-completion-pdf-field "File"
-        bibtex-completion-notes-path org-directory))
-
-(use-package org-ref
-  :config
-  (setq org-ref-completion-library 'org-ref-helm-cite
-        org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
-        org-ref-default-bibliography bib-files-directory
-        org-ref-notes-directory org-directory
-        org-ref-notes-function 'orb-edit-notes))
 
 
 
