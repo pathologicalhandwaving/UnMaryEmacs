@@ -43,6 +43,16 @@
 (require 'use-package)
 (setq use-package-always-ensure 't)
 
+
+;; git
+(use-package git)
+
+;; el-get
+(use-package el-get
+  :init
+  (require 'el-get)
+  (add-to-list 'load-path "~/.emacs.d/el-get"))
+
 ;; server
 (require 'server)
 (if (not (server-running-p)) (server-start))
