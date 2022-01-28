@@ -108,7 +108,7 @@
   (setq dashboard-set-file-icons t)
   (setq dashboard-banner-logo-title "Welcome to UnMary Emacs!")
   ;;(setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
-  (setq dashboard-startup-banner "~/.emacs.d/logo.jpeg")  ;; use custom image as banner
+  (setq dashboard-startup-banner "~/.emacs.d/unmary.png")  ;; use custom image as banner
   (setq dashboard-center-content nil) ;; set to 't' for centered content
   (setq dashboard-items '((recents . 5)
                           (agenda . 5 )
