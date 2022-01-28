@@ -43,15 +43,44 @@
 (require 'use-package)
 (setq use-package-always-ensure 't)
 
+;; server
+(require 'server)
+(if (not (server-running-p)) (server-start))
+
+
 ;; Bars
 (setq inhibit-startup-message t)
 (tool-bar-mode -1)
 (menu-bar-mode +1)
 (scroll-bar-mode -1)
 
+(column-number-mode t)
+
+;; scroll
+(setq scroll-margin 0)
+(setq scroll-conservatively 10000)
+(setq scroll-preserve-screen-position t)
+
+;; recents
+(recentf-mode 1)
+(defvar recentf-max-saved-items)
+(setq recentf-max-saved-items 200)
+
+
+;; User Information
+(setq user-full-name "UnMary")
+(setq user-mail-address "ourladyofunmary@gmail.com")
+
+
 ;; Theme
 (use-package doom-themes
   :config (load-theme 'doom-outrun-electric t))
+
+;; delimiters
+(use-package rainbow-delimiters
+:commands (rainbow-delimiters-mode)
+:init
+(add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 
 ;; Open dired in same buffer
 (put 'dired-find-alternate-file 'disabled nil)
@@ -72,7 +101,11 @@
 (make-directory (expand-file-name "backups/" user-emacs-directory) t)
 (setq backup-directory-alist `(("." . ,(expand-file-name "backups/" user-emacs-directory))))
 
-
+;; save buffer position
+(if (version< emacs-version "25.0")
+    (progn (require 'saveplace)
+        (setq-default save-place t))
+(save-place-mode 1))
 
 
 
@@ -142,6 +175,11 @@
     (setq org-superstar-special-todo-items t)
     (add-hook 'org-mode-hook (lambda ()
                                (org-superstar-mode 1))))
+
+(setq org-src-fontify-natively t)
+(setq org-src-tab-acts-natively t)
+(setq org-edit-src-content-indentation 0)
+(use-package htmlize)
 
 ;; Line spacing
 (setq-default line-spacing 6)
