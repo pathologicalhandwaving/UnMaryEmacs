@@ -96,6 +96,12 @@
 (use-package all-the-icons
   :ensure t)
 
+(use-package all-the-icons-dired
+  :ensure t
+  :defer t
+  :hook (dired-mode . all-the-icons-dired-mode))
+
+
 ;; delimiters
 (use-package rainbow-delimiters
 :commands (rainbow-delimiters-mode)
