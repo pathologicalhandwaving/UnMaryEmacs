@@ -5,7 +5,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (org-superstar org-appear which-key company helm doom-themes use-package))))
+    (octicons dashboard htmlize rainbow-delimiters all-the-icons-dired all-the-icons exec-path-from-shell el-get git-commit git org-superstar org-appear which-key company helm doom-themes use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
