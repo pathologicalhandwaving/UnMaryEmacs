@@ -1,0 +1,2 @@
+;;; Generated package description from side-notes.el  -*- no-byte-compile: t -*-
+(define-package "side-notes" "20210709.1403" "Easy access to a directory notes file" '((emacs "24.4")) :commit "41fe8544661a772f764a0924e04080f258053955" :authors '(("Paul W. Rankin" . "pwr@bydasein.com")) :maintainer '("Paul W. Rankin" . "pwr@bydasein.com") :keywords '("convenience") :url "https://github.com/rnkn/side-notes")
