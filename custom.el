@@ -11,7 +11,7 @@
  '(global-display-line-numbers-mode t)
  '(package-selected-packages
    (quote
-    (org-ref-prettify org-ref-url-utils org-ref-pdf org-ref-scifinder nist-webbook org-ref-bibtex org-ref-arxiv org-ref-isbn doi-utils org-ref-helm org-ref i3wm-config-mode i3wm i3-mode fontawesome helm-icons octicons dashboard htmlize rainbow-delimiters all-the-icons-dired all-the-icons exec-path-from-shell el-get git-commit git org-superstar org-appear which-key company helm doom-themes use-package)))
+    (consult marginalia embark vertico orderless vertigo org-ref-prettify org-ref-url-utils org-ref-pdf org-ref-scifinder nist-webbook org-ref-bibtex org-ref-arxiv org-ref-isbn doi-utils org-ref-helm org-ref i3wm-config-mode i3wm i3-mode fontawesome helm-icons octicons dashboard htmlize rainbow-delimiters all-the-icons-dired all-the-icons exec-path-from-shell el-get git-commit git org-superstar org-appear which-key company helm doom-themes use-package)))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

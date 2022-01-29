@@ -261,15 +261,24 @@
 
 (define-key bibtex-mode-map (kbd "H-b") 'org-ref-bibtex-hydra/body)
 
-;(use-package org-ref-helm)
-;;(use-package doi-utils)
-;(use-package org-ref-isbn)
-;(use-package org-ref-arxiv)
-;(use-package org-ref-bibtex)
-;(use-package nist-webbook)
-;(use-package org-ref-scifinder)
-;(use-package org-ref-pdf)
-;(use-package org-ref-url-utils)
+;;(use-package vertico)
+(use-package orderless)
+(use-package embark)
+(use-package marginalia)
+(use-package consult)
+
+(use-package citar
+  :bind (("C-c b" . citar-insert-citation)
+         :map minibuffer-local-map
+         ("M-b" . citar-insert-preset))
+  :custom
+  (citar-bibliography '("/mnt/bd9dc6ee-d251-406d-8dce-ea714434ee34/Bibliography/default.bib"))
+  
+(setq citar-symbols
+      `((file ,(all-the-icons-faicon "file-o" :face 'all-the-icons-green :v-adjust -0.1) . " ")
+        (note ,(all-the-icons-material "speaker_notes" :face 'all-the-icons-blue :v-adjust -0.3) . " ")
+        (link ,(all-the-icons-octicon "link" :face 'all-the-icons-orange :v-adjust 0.01) . " ")))
+(setq citar-symbol-separator "  ")
 
 (setq bibtex-completion-bibliography '(".bib"
 					 "/mnt/bd9dc6ee-d251-406d-8dce-ea714434ee34/Bibliography/default.bib")
