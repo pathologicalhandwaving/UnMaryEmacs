@@ -62,6 +62,9 @@
 (use-package exec-path-from-shell)
 (require 'exec-path-from-shell)
 
+;; i3-wm
+(use-package i3wm)
+
 
 ;; Bars
 (setq inhibit-startup-message t)
@@ -70,6 +73,7 @@
 (scroll-bar-mode -1)
 
 (column-number-mode t)
+(global-display-line-numbers-mode)
 
 ;; scroll
 (setq scroll-margin 0)
@@ -108,12 +112,10 @@
   (setq dashboard-set-file-icons t)
   (setq dashboard-banner-logo-title "Welcome to UnMary Emacs!")
   ;;(setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
-  (setq dashboard-startup-banner "~/.emacs.d/unmary.png")  ;; use custom image as banner
+  (setq dashboard-startup-banner "~/.emacs.d/halfunmary.png")  ;; use custom image as banner
   (setq dashboard-center-content nil) ;; set to 't' for centered content
   (setq dashboard-items '((recents . 5)
-                          (agenda . 5 )
                           (bookmarks . 3)
-                          (projects . 3)
                           (registers . 3)))
   :config
   (dashboard-setup-startup-hook)
@@ -240,7 +242,21 @@
 (plist-put org-format-latex-options :scale 2)
 
 ;; BibTeX
+(use-package org-ref)
+(use-package org-ref-prettify)
+(with-eval-after-load 'org
+  (add-hook 'org-mode-hook 'org-ref-prettify-mode))
 
+(use-package bibtex)
+;(use-package org-ref-helm)
+(use-package doi-utils)
+;(use-package org-ref-isbn)
+;(use-package org-ref-arxiv)
+;(use-package org-ref-bibtex)
+;(use-package nist-webbook)
+;(use-package org-ref-scifinder)
+;(use-package org-ref-pdf)
+;(use-package org-ref-url-utils)
 
 
 

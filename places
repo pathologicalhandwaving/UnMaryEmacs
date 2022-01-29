@@ -1,5 +1,6 @@
 ;;; -*- coding: utf-8 -*-
-(("/home/unmary/.emacs.d/elpa/fontawesome-20170305.1356/fontawesome-autoloads.el" . 982)
+(("/home/unmary/.emacs.d/init.el" . 2731)
+ ("/home/unmary/.emacs.d/elpa/fontawesome-20170305.1356/fontawesome-autoloads.el" . 982)
  ("/home/unmary/.emacs.d/elpa/helm-icons-20210330.1216/helm-icons-autoloads.el" . 504)
  ("/home/unmary/.emacs.d/elpa/treemacs-20220127.2125/treemacs-autoloads.el" . 26062)
  ("/home/unmary/.emacs.d/elpa/ace-window-20200606.1259/ace-window-autoloads.el" . 2086)
@@ -10,7 +11,6 @@
  ("/home/unmary/.emacs.d/elpa/ht-20210119.741/ht-autoloads.el" . 370)
  ("/home/unmary/.emacs.d/elpa/cfrs-20211013.1802/cfrs-autoloads.el" . 535)
  ("/home/unmary/.emacs.d/elpa/posframe-20220124.859/posframe-autoloads.el" . 8511)
- ("/home/unmary/.emacs.d/init.el" . 3274)
  ("/home/unmary/.emacs.d/elpa/octicons-20151101.340/octicons-autoloads.el" . 802)
  ("/home/unmary/.emacs.d/elpa/dashboard-20220123.1619/dashboard-autoloads.el" . 969)
  ("/home/unmary/.emacs.d/elpa/htmlize-20210825.2150/htmlize-autoloads.el" . 2873))

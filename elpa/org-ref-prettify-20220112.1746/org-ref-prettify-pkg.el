@@ -1,0 +1,2 @@
+;;; -*- no-byte-compile: t -*-
+(define-package "org-ref-prettify" "20220112.1746" "Prettify org-ref citation links" '((emacs "24.3") (org-ref "3.0") (bibtex-completion "1.0.0")) :commit "cbf9a709a10304981c38eba1149def17151aca3c" :authors '(("Alex Kost" . "alezost@gmail.com") ("Vitus Schäfftlein" . "vitusschaefftlein@live.de")) :maintainer '("Alex Kost" . "alezost@gmail.com") :keywords '("convenience") :url "https://github.com/alezost/org-ref-prettify.el")
