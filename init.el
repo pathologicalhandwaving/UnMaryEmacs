@@ -108,8 +108,8 @@
 ;; dashboard
 (use-package dashboard
   :init
-  (setq dashboard-set-heading-icons t)
-  (setq dashboard-set-file-icons t)
+  ;;(setq dashboard-set-heading-icons t)
+  ;;(setq dashboard-set-file-icons t)
   (setq dashboard-banner-logo-title "Welcome to UnMary Emacs!")
   ;;(setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
   (setq dashboard-startup-banner "~/.emacs.d/halfunmary.png")  ;; use custom image as banner
@@ -118,9 +118,9 @@
                           (bookmarks . 3)
                           (registers . 3)))
   :config
-  (dashboard-setup-startup-hook)
-  (dashboard-modify-heading-icons '((recents . "file-text")
-				    (bookmarks . "book"))))
+  (dashboard-setup-startup-hook))
+  ;;(dashboard-modify-heading-icons '((recents . "file-text")
+  ;;				    (bookmarks . "book"))))
 
 ;; dashboard in daemon mode
 (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
@@ -248,8 +248,21 @@
   (add-hook 'org-mode-hook 'org-ref-prettify-mode))
 
 (use-package bibtex)
+(require 'bibtex)
+
+(setq bibtex-autokey-year-length 4
+	bibtex-autokey-name-year-separator "-"
+	bibtex-autokey-year-title-separator "-"
+	bibtex-autokey-titleword-separator "-"
+	bibtex-autokey-titlewords 2
+	bibtex-autokey-titlewords-stretch 1
+	bibtex-autokey-titleword-length 5
+	org-ref-bibtex-hydra-key-binding (kbd "H-b"))
+
+(define-key bibtex-mode-map (kbd "H-b") 'org-ref-bibtex-hydra/body)
+
 ;(use-package org-ref-helm)
-(use-package doi-utils)
+;;(use-package doi-utils)
 ;(use-package org-ref-isbn)
 ;(use-package org-ref-arxiv)
 ;(use-package org-ref-bibtex)
@@ -258,7 +271,23 @@
 ;(use-package org-ref-pdf)
 ;(use-package org-ref-url-utils)
 
+(setq bibtex-completion-bibliography '(".bib"
+					 "/mnt/bd9dc6ee-d251-406d-8dce-ea714434ee34/Bibliography/default.bib")
+	bibtex-completion-library-path '("/mnt/bd9dc6ee-d251-406d-8dce-ea714434ee34/Books/PDFs")
+	bibtex-completion-notes-path "/mnt/bd9dc6ee-d251-406d-8dce-ea714434ee34/Notes"
+	bibtex-completion-notes-template-multiple-files "* ${author-or-editor}, ${title}, ${journal}, (${year}) :${=type=}: \n\nSee [[cite:&${=key=}]]\n"
 
+	bibtex-completion-additional-search-fields '(keywords)
+	bibtex-completion-display-formats
+	'((article       . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${journal:40}")
+	  (inbook        . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} Chapter ${chapter:32}")
+	  (incollection  . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
+	  (inproceedings . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
+	  (t             . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*}"))
+	bibtex-completion-pdf-open-function
+	(lambda (fpath)
+	  (call-process "open" nil 0 nil fpath)))
+(define-key org-mode-map (kbd "C-c ]") 'org-ref-insert-link)
 
 
 
