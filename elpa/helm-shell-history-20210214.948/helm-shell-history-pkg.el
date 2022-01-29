@@ -1,0 +1,2 @@
+;;; Generated package description from helm-shell-history.el  -*- no-byte-compile: t -*-
+(define-package "helm-shell-history" "20210214.948" "Find shell history from helm" '((helm "3.7") (emacs "24.3")) :commit "0c861f3db721e54053fc65f5651cf548cc1cb600" :authors '(("Yuta Yamada <cokesboy\"at\"gmail.com>")) :maintainer '("Yuta Yamada <cokesboy\"at\"gmail.com>") :keywords '("helm" "terminals" "shell") :url "https://github.com/yuutayamada/helm-shell-history")

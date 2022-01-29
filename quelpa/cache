@@ -1,0 +1,1 @@
+((inherit-org :repo "chenyanming/inherit-org" :fetcher github))

@@ -43,6 +43,21 @@
 (require 'use-package)
 (setq use-package-always-ensure 't)
 
+(use-package quelpa-use-package)
+(quelpa
+ '(quelpa-use-package
+   :fetcher git
+   :url "https://github.com/quelpa/quelpa-use-package.git"))
+(require 'quelpa-use-package)
+
+
+;; Fix unicode errors
+(setenv "LANG" "en_US.UTF-8")
+(setenv "LC_ALL" "en_US.UTF-8")
+(setenv "LC_CTYPE" "en_US.UTF-8")
+
+;; Default Font
+(use-package fira-code-mode)
 
 ;; git
 (use-package git)
@@ -65,6 +80,10 @@
 ;; i3-wm
 (use-package i3wm)
 
+(use-package editorconfig
+  :ensure t
+  :config
+  (editorconfig-mode 1))
 
 ;; Bars
 (setq inhibit-startup-message t)
@@ -105,6 +124,22 @@
   :defer t
   :hook (dired-mode . all-the-icons-dired-mode))
 
+;; Web
+(use-package inherit-org
+  :quelpa
+  (inherit-org :repo "chenyanming/inherit-org" :fetcher github))
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/private/inherit-org"))
+(require 'inherit-org)
+(with-eval-after-load 'org
+  (require 'inherit-org))
+(with-eval-after-load 'info
+  (add-hook 'Info-mode-hook 'inherit-org-mode))
+(with-eval-after-load 'helpful
+  (add-hook 'helpful-mode-hook 'inherit-org-mode))
+(with-eval-after-load 'w3m
+  (add-hook 'w3m-fontify-before-hook 'inherit-org-w3m-headline-fontify)
+  (add-hook 'w3m-fontify-after-hook 'inherit-org-mode))
+
 ;; dashboard
 (use-package dashboard
   :init
@@ -125,13 +160,31 @@
 ;; dashboard in daemon mode
 (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
 
+;; Parrot
+(defun my/parrot-animate-when-compile-success (buffer result)
+  (if (string-match "^finished" result)
+      (parrot-start-animation)))
 
+(use-package parrot
+  :ensure t
+  :config
+  (parrot-mode)
+  (parrot-set-parrot-type 'thumbsup)
+  (add-hook 'before-save-hook 'parrot-start-animation)
+  (add-to-list 'compilation-finish-functions 'my/parrot-animate-when-compile-success))
+
+(global-set-key (kbd "C-c p") 'parrot-rotate-prev-word-at-point)
+(global-set-key (kbd "C-c n") 'parrot-rotate-next-word-at-point)
 
 ;; delimiters
 (use-package rainbow-delimiters
 :commands (rainbow-delimiters-mode)
 :init
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+(defvar show-paren-delay)
+(setq show-paren-delay 0.0)
+(show-paren-mode t)
+
 
 ;; Open dired in same buffer
 (put 'dired-find-alternate-file 'disabled nil)
@@ -247,6 +300,19 @@
 
 (use-package wordnut
   :bind ("M-!" . wordnut-lookup-current-word))
+
+(use-package org-sidebar
+  :quelpa (org-sidebar :fetcher github :repo "alphapapa/org-sidebar"))
+
+
+;; quickref
+(use-package quickref)
+(quickref-global-mode +1)
+;;(setq quickref-save-file "/mnt/bd9dc6ee-d251-406d-8dce-ea714434ee34/Notes/quickref.org")
+
+;; org-noter
+(use-package org-noter)
+
 
 ;; LaTeX (karthink)
 (use-package latex
