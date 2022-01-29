@@ -111,7 +111,9 @@
   (setq load-bash-alias-bashrc-file "~/.bashrc")
   (setq load-bash-alias-exclude-aliases-regexp "^alias magit\\|^alias oc"))
 
-
+(use-package dashboard-ls
+  (setq dashboard-items '((ls-directories . 5)
+  (ls-files . 5))))
 
 ;; User Information
 (setq user-full-name "UnMary")
