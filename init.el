@@ -105,6 +105,14 @@
 (setq recentf-max-saved-items 200)
 
 
+(use-package load-bash-alias
+  :ensure t
+  :config
+  (setq load-bash-alias-bashrc-file "~/.bashrc")
+  (setq load-bash-alias-exclude-aliases-regexp "^alias magit\\|^alias oc"))
+
+
+
 ;; User Information
 (setq user-full-name "UnMary")
 (setq user-mail-address "ourladyofunmary@gmail.com")
