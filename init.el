@@ -62,6 +62,19 @@
 ;; git
 (use-package git)
 (use-package git-commit)
+(use-package git-gutter-fringe)
+(setq git-gutter:window-width 2)
+(setq git-gutter:unchanged-sign "  ")
+(set-face-foreground 'git-gutter:unchanged "yellow")
+(setq git-gutter:modified-sign "🌩")
+(setq git-gutter:added-sign "++")
+(setq git-gutter:deleted-sign "−−")
+(set-face-foreground 'git-gutter-fr:modified "blue")
+(set-face-foreground 'git-gutter-fr:added "green")
+(set-face-foreground 'git-gutter-fr:deleted "red")
+(set-face-foreground 'git-gutter:added "green")
+(set-face-foreground 'git-gutter:deleted "red")
+(set-face-foreground 'git-gutter:modified "blue")
 
 ;; el-get
 (use-package el-get
@@ -111,9 +124,6 @@
   (setq load-bash-alias-bashrc-file "~/.bashrc")
   (setq load-bash-alias-exclude-aliases-regexp "^alias magit\\|^alias oc"))
 
-(use-package dashboard-ls
-  (setq dashboard-items '((ls-directories . 5)
-  (ls-files . 5))))
 
 ;; User Information
 (setq user-full-name "UnMary")

@@ -1,0 +1,2 @@
+;;; Generated package description from load-bash-alias.el  -*- no-byte-compile: t -*-
+(define-package "load-bash-alias" "20220108.2103" "Convert bash aliases into eshell ones" '((emacs "24.1") (seq "2.16")) :commit "968f037eff48ceca15fd135738051c48ab14cfd6" :authors '(("Davide Restivo" . "davide.restivo@yahoo.it")) :maintainer '("Davide Restivo" . "davide.restivo@yahoo.it") :keywords '("emacs" "bash" "eshell" "alias") :url "https://github.com/daviderestivo/load-bash-alias")
