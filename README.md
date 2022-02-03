@@ -2,7 +2,8 @@
 
 ![](logo.jpeg)
 
-Personal Emacs configuration.
+
+Unstable Personal Emacs configuration.
 
 ## Featuring
   + Regolith Linux
@@ -24,7 +25,7 @@ Personal Emacs configuration.
 ## Installation
 
 ``` bash
-git clone https://github.com/pathologicalhandwaving/UnMaryEmacs.git ~/.emacs.d
+git clone git@github.com:pathologicalhandwaving/UnMaryEmacs.git ~/.emacs.d
 ```
 
 
