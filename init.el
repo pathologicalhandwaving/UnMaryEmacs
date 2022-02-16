@@ -34,6 +34,9 @@
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/") t)
+(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
+
 (package-initialize)
 
 ;; use-package
@@ -193,8 +196,6 @@
   (add-hook 'before-save-hook 'parrot-start-animation)
   (add-to-list 'compilation-finish-functions 'my/parrot-animate-when-compile-success))
 
-(global-set-key (kbd "C-c p") 'parrot-rotate-prev-word-at-point)
-(global-set-key (kbd "C-c n") 'parrot-rotate-next-word-at-point)
 
 ;; delimiters
 (use-package rainbow-delimiters
@@ -332,6 +333,34 @@
 
 ;; org-noter
 (use-package org-noter)
+
+;; org-roam
+(use-package org-roam
+  :ensure t
+  :init
+  (setq org-roam-v2-ack t)
+  :custom
+  (org-roam-directory "/mnt/bd9dc6ee-d251-406d-8dce-ea714434ee34/Notes/Org")
+  :bind(
+	:map org-mode-map
+	     ("C-M-i" . completion-at-point))
+  :config
+  (org-roam-setup))
+(global-set-key (kbd "C-c n l") 'org-roam-buffer-toggle)
+(global-set-key (kbd "C-c n f") 'org-roam-node-find)
+(global-set-key (kbd "C-c n i") 'org-roam-node-insert)
+(setq org-roam-mode-section-functions
+      (list #'org-roam-backlinks-section
+	    #'org-roam-reflinks-section
+	    #'org-roam-unlinked-references-section))
+
+(add-to-list 'display-buffer-alist
+	     '("\\*org-roam\\*"
+	       (display-buffer-in-side-window)
+	       (direction . right)
+	       (window-width . 0.23)
+	       (window-height . ((no-other-window . t)
+				 (no-delete-other-windows . t)))))
 
 
 ;; LaTeX (karthink)

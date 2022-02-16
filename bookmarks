@@ -2,7 +2,12 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("default.bib"
+(("org-capture-last-stored"
+ (filename . "/mnt/bd9dc6ee-d251-406d-8dce-ea714434ee34/Notes/Org/20220215162136-vnc.org")
+ (front-context-string . "\n\nVirtual Networ")
+ (rear-context-string . "D:\n#+title: vnc\n")
+ (position . 81))
+("default.bib"
  (filename . "/mnt/bd9dc6ee-d251-406d-8dce-ea714434ee34/Bibliography/default.bib")
  (front-context-string . "\n@article{Hauter")
  (rear-context-string . "KEY: Hauter2021 ")
