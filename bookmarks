@@ -2,11 +2,16 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("org-capture-last-stored"
- (filename . "/mnt/bd9dc6ee-d251-406d-8dce-ea714434ee34/Notes/Org/20220215162136-vnc.org")
- (front-context-string . "\n\nVirtual Networ")
- (rear-context-string . "D:\n#+title: vnc\n")
- (position . 81))
+(("Linode-VNC"
+ (filename . "/mnt/bd9dc6ee-d251-406d-8dce-ea714434ee34/Notes/Mobile/An Overview of VNC (Virtual Network Computing).md")
+ (front-context-string . "er is the comput")
+ (rear-context-string . "er. The VNC serv")
+ (position . 575))
+("org-capture-last-stored"
+ (filename . "/mnt/bd9dc6ee-d251-406d-8dce-ea714434ee34/Notes/Org/20220216223916-dmitry_valeryevich_utkin.org")
+ (front-context-string . "\nAccording to SP")
+ (rear-context-string . "leryevich Utkin\n")
+ (position . 206))
 ("default.bib"
  (filename . "/mnt/bd9dc6ee-d251-406d-8dce-ea714434ee34/Bibliography/default.bib")
  (front-context-string . "\n@article{Hauter")

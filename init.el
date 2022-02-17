@@ -20,7 +20,6 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Commentary:
-
 ;; UnMary Emacs init.el
 
 ;;; Code:
@@ -35,7 +34,7 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/") t)
 (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
-(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
+;;(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 
 (package-initialize)
 
@@ -60,24 +59,24 @@
 (setenv "LC_CTYPE" "en_US.UTF-8")
 
 ;; Default Font
-(use-package fira-code-mode)
+;;(use-package fira-code-mode)
 
 ;; git
-(use-package git)
-(use-package git-commit)
-(use-package git-gutter-fringe)
-(setq git-gutter:window-width 2)
-(setq git-gutter:unchanged-sign "  ")
-(set-face-foreground 'git-gutter:unchanged "yellow")
-(setq git-gutter:modified-sign "🌩")
-(setq git-gutter:added-sign "++")
-(setq git-gutter:deleted-sign "−−")
-(set-face-foreground 'git-gutter-fr:modified "blue")
-(set-face-foreground 'git-gutter-fr:added "green")
-(set-face-foreground 'git-gutter-fr:deleted "red")
-(set-face-foreground 'git-gutter:added "green")
-(set-face-foreground 'git-gutter:deleted "red")
-(set-face-foreground 'git-gutter:modified "blue")
+;; (use-package git)
+;; (use-package git-commit)
+;; (use-package git-gutter-fringe)
+;; (setq git-gutter:window-width 2)
+;; (setq git-gutter:unchanged-sign "  ")
+;; (set-face-foreground 'git-gutter:unchanged "yellow")
+;; (setq git-gutter:modified-sign "🌩")
+;; (setq git-gutter:added-sign "++")
+;; (setq git-gutter:deleted-sign "−−")
+;; (set-face-foreground 'git-gutter-fr:modified "blue")
+;; (set-face-foreground 'git-gutter-fr:added "green")
+;; (set-face-foreground 'git-gutter-fr:deleted "red")
+;; (set-face-foreground 'git-gutter:added "green")
+;; (set-face-foreground 'git-gutter:deleted "red")
+;; (set-face-foreground 'git-gutter:modified "blue")
 
 ;; el-get
 (use-package el-get
@@ -93,22 +92,65 @@
 (use-package exec-path-from-shell)
 (require 'exec-path-from-shell)
 
+;; Only y/n answers 
+(defalias 'yes-or-no-p 'y-or-n-p)
+
+;; Deleted files to trash
+(setq delete-by-moving-to-trash t)
+
+;; Keep clean (create new directory if not exist)
+(make-directory (expand-file-name "backups/" user-emacs-directory) t)
+(setq backup-directory-alist `(("." . ,(expand-file-name "backups/" user-emacs-directory))))
+
+;; save buffer position
+(if (version< emacs-version "25.0")
+    (progn (require 'saveplace)
+        (setq-default save-place t))
+(save-place-mode 1))
+
 ;; i3-wm
 (use-package i3wm)
 
-(use-package editorconfig
-  :ensure t
-  :config
-  (editorconfig-mode 1))
+;; (use-package editorconfig
+;;   :ensure t
+;;   :config
+;;   (editorconfig-mode 1))
 
 ;; Bars
 (setq inhibit-startup-message t)
+
 (tool-bar-mode -1)
 (menu-bar-mode +1)
 (scroll-bar-mode -1)
+(tooltip-mode -1)
 
-(column-number-mode t)
-(global-display-line-numbers-mode)
+(set-fringe-mode 10)
+
+(setq visible-bell t)
+
+;; Line Numbers
+(column-number-mode)
+(setq display-line-numbers-type 'relative)
+(global-display-line-numbers-mode t)
+
+;; Disable line numbers for some modes
+(dolist (mode '(org-mode-hook
+		org-agenda-mode-hook
+                term-mode-hook
+                side-notes-toggle-notes
+                shell-mode-hook
+                eshell-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+
+;; Sensible line breaking
+(add-hook 'text-mode-hook 'visual-line-mode)
+
+;; Overwrite selected text
+(delete-selection-mode t)
+
+;; Scroll to the first and last line of the buffer
+(setq scroll-error-top-bottom t)
 
 ;; scroll
 (setq scroll-margin 0)
@@ -135,10 +177,15 @@
 
 ;; Theme
 (use-package doom-themes
-  :config (load-theme 'doom-outrun-electric t))
+  :config (load-theme 'doom-nord t))
 
 
 ;; icons
+;; NOTE: The first time you load your configuration on a new machine, you'll
+;; need to run the following command interactively so that mode line icons
+;; display correctly:
+;;
+;; M-x all-the-icons-install-fonts
 (use-package all-the-icons
   :ensure t)
 
@@ -147,21 +194,26 @@
   :defer t
   :hook (dired-mode . all-the-icons-dired-mode))
 
+(use-package doom-modeline
+  :init (doom-modeline-mode 1)
+  :custom ((doom-modeline-height 15)))
+
+
 ;; Web
-(use-package inherit-org
-  :quelpa
-  (inherit-org :repo "chenyanming/inherit-org" :fetcher github))
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/private/inherit-org"))
-(require 'inherit-org)
-(with-eval-after-load 'org
-  (require 'inherit-org))
-(with-eval-after-load 'info
-  (add-hook 'Info-mode-hook 'inherit-org-mode))
-(with-eval-after-load 'helpful
-  (add-hook 'helpful-mode-hook 'inherit-org-mode))
-(with-eval-after-load 'w3m
-  (add-hook 'w3m-fontify-before-hook 'inherit-org-w3m-headline-fontify)
-  (add-hook 'w3m-fontify-after-hook 'inherit-org-mode))
+;; (use-package inherit-org
+;;   :quelpa
+;;   (inherit-org :repo "chenyanming/inherit-org" :fetcher github))
+;; (add-to-list 'load-path (expand-file-name "~/.emacs.d/private/inherit-org"))
+;; (require 'inherit-org)
+;; (with-eval-after-load 'org
+;;   (require 'inherit-org))
+;; (with-eval-after-load 'info
+;;   (add-hook 'Info-mode-hook 'inherit-org-mode))
+;; (with-eval-after-load 'helpful
+;;   (add-hook 'helpful-mode-hook 'inherit-org-mode))
+;; (with-eval-after-load 'w3m
+;;   (add-hook 'w3m-fontify-before-hook 'inherit-org-w3m-headline-fontify)
+;;   (add-hook 'w3m-fontify-after-hook 'inherit-org-mode))
 
 ;; dashboard
 (use-package dashboard
@@ -184,17 +236,17 @@
 (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
 
 ;; Parrot
-(defun my/parrot-animate-when-compile-success (buffer result)
-  (if (string-match "^finished" result)
-      (parrot-start-animation)))
+;; (defun my/parrot-animate-when-compile-success (buffer result)
+;;   (if (string-match "^finished" result)
+;;       (parrot-start-animation)))
 
-(use-package parrot
-  :ensure t
-  :config
-  (parrot-mode)
-  (parrot-set-parrot-type 'thumbsup)
-  (add-hook 'before-save-hook 'parrot-start-animation)
-  (add-to-list 'compilation-finish-functions 'my/parrot-animate-when-compile-success))
+;; (use-package parrot
+;;   :ensure t
+;;   :config
+;;   (parrot-mode)
+;;   (parrot-set-parrot-type 'thumbsup)
+;;   (add-hook 'before-save-hook 'parrot-start-animation)
+;;   (add-to-list 'compilation-finish-functions 'my/parrot-animate-when-compile-success))
 
 
 ;; delimiters
@@ -216,21 +268,6 @@
 ;; Copy and move files between dired buffers
 (setq dired-dwim-target t)
 
-;; Only y/n answers 
-(defalias 'yes-or-no-p 'y-or-n-p)
-
-;; Deleted files to trash
-(setq delete-by-moving-to-trash t)
-
-;; Keep clean (create new directory if not exist)
-(make-directory (expand-file-name "backups/" user-emacs-directory) t)
-(setq backup-directory-alist `(("." . ,(expand-file-name "backups/" user-emacs-directory))))
-
-;; save buffer position
-(if (version< emacs-version "25.0")
-    (progn (require 'saveplace)
-        (setq-default save-place t))
-(save-place-mode 1))
 
 
 
@@ -268,14 +305,7 @@
 	which-key-idle-dely 50)
   (which-key-setup-minibuffer))
 
-;; Sensible line breaking
-(add-hook 'text-mode-hook 'visual-line-mode)
 
-;; Overwrite selected text
-(delete-selection-mode t)
-
-;; Scroll to the first and last line of the buffer
-(setq scroll-error-top-bottom t)
 
 ;; Org-Mode
 (use-package org
@@ -283,6 +313,7 @@
   (("C-c l" . org-store-link)
    ("C-c c" . org-capture)))
 
+(require 'org-protocol)
 ;; Startup
 (setq org-startup-indented t
       org-pretty-entities t
@@ -303,7 +334,7 @@
 
 (setq org-src-fontify-natively t)
 (setq org-src-tab-acts-natively t)
-(setq org-edit-src-content-indentation 0)
+(setq org-edit-src-content-indentation 2)
 (use-package htmlize)
 
 ;; Line spacing
@@ -327,139 +358,147 @@
 
 
 ;; quickref
-(use-package quickref)
-(quickref-global-mode +1)
+;;(use-package quickref)
+;;(quickref-global-mode +1)
 ;;(setq quickref-save-file "/mnt/bd9dc6ee-d251-406d-8dce-ea714434ee34/Notes/quickref.org")
 
 ;; org-noter
-(use-package org-noter)
+;;(use-package org-noter)
 
 ;; org-roam
 (use-package org-roam
-  :ensure t
+;;    :hook
+;;  (after-init . org-roam-mode)
+  :config
+  (require 'org-roam-protocol)
   :init
   (setq org-roam-v2-ack t)
   :custom
   (org-roam-directory "/mnt/bd9dc6ee-d251-406d-8dce-ea714434ee34/Notes/Org")
-  :bind(
-	:map org-mode-map
-	     ("C-M-i" . completion-at-point))
-  :config
-  (org-roam-setup))
-(global-set-key (kbd "C-c n l") 'org-roam-buffer-toggle)
-(global-set-key (kbd "C-c n f") 'org-roam-node-find)
-(global-set-key (kbd "C-c n i") 'org-roam-node-insert)
-(setq org-roam-mode-section-functions
-      (list #'org-roam-backlinks-section
-	    #'org-roam-reflinks-section
-	    #'org-roam-unlinked-references-section))
+  :bind
+  ((("C-c n l" . org-roam-buffer-toggle)
+    ("C-c n f" . org-roam-node-find)
+    ("C-c n g" . org-roam-graph)
+    ("C-c n i" . org-roam-node-insert)
+    ("C-c n I" . org-roam-insert-immediate))))
 
+(use-package org-roam-ui
+  :after org-roam
+  :config
+  (setq org-roam-ui-sync-theme t
+        org-roam-ui-follow t
+        org-roam-ui-update-on-save t
+        org-roam-ui-open-on-start t))
+
+;; for org-roam-buffer-toggle
+;; Recommendation in the official manual
 (add-to-list 'display-buffer-alist
 	     '("\\*org-roam\\*"
-	       (display-buffer-in-side-window)
-	       (direction . right)
-	       (window-width . 0.23)
-	       (window-height . ((no-other-window . t)
-				 (no-delete-other-windows . t)))))
+               (display-buffer-in-direction)
+               (direction . right)
+               (window-width . 0.23)
+               (window-height . fit-window-to-buffer)))
+
+
 
 
 ;; LaTeX (karthink)
-(use-package latex
-  :ensure auctex
-  :hook ((LaTeX-mode . prettify-symbols-mode))
-  :bind (:map LaTeX-mode-map
-         ("C-S-e" . latex-math-from-calc))
-  :config
-  ;; Format math as a Latex string with Calc
-  (defun latex-math-from-calc ()
-    "Evaluate `calc' on the contents of line at point."
-    (interactive)
-    (cond ((region-active-p)
-           (let* ((beg (region-beginning))
-                  (end (region-end))
-                  (string (buffer-substring-no-properties beg end)))
-             (kill-region beg end)
-             (insert (calc-eval `(,string calc-language latex
-                                          calc-prefer-frac t
-                                          calc-angle-mode rad)))))
-          (t (let ((l (thing-at-point 'line)))
-               (end-of-line 1) (kill-line 0) 
-               (insert (calc-eval `(,l
-                                    calc-language latex
-                                    calc-prefer-frac t
-                                    calc-angle-mode rad))))))))
+;; (use-package latex
+;;   :ensure auctex
+;;   :hook ((LaTeX-mode . prettify-symbols-mode))
+;;   :bind (:map LaTeX-mode-map
+;;          ("C-S-e" . latex-math-from-calc))
+;;   :config
+;;   ;; Format math as a Latex string with Calc
+;;   (defun latex-math-from-calc ()
+;;     "Evaluate `calc' on the contents of line at point."
+;;     (interactive)
+;;     (cond ((region-active-p)
+;;            (let* ((beg (region-beginning))
+;;                   (end (region-end))
+;;                   (string (buffer-substring-no-properties beg end)))
+;;              (kill-region beg end)
+;;              (insert (calc-eval `(,string calc-language latex
+;;                                           calc-prefer-frac t
+;;                                           calc-angle-mode rad)))))
+;;           (t (let ((l (thing-at-point 'line)))
+;;                (end-of-line 1) (kill-line 0) 
+;;                (insert (calc-eval `(,l
+;;                                     calc-language latex
+;;                                     calc-prefer-frac t
+;;                                     calc-angle-mode rad))))))))
 
 ;; CDLatex settings
-(use-package cdlatex
-  :ensure t
-  :hook (LaTeX-mode . turn-on-cdlatex)
-  :bind (:map cdlatex-mode-map 
-              ("<tab>" . cdlatex-tab)))
+;; (use-package cdlatex
+;;   :ensure t
+;;   :hook (LaTeX-mode . turn-on-cdlatex)
+;;   :bind (:map cdlatex-mode-map 
+;;               ("<tab>" . cdlatex-tab)))
 
-;; Yasnippet settings
-(use-package yasnippet
-  :ensure t
-  :hook ((LaTeX-mode . yas-minor-mode)
-         (post-self-insert . my/yas-try-expanding-auto-snippets))
-  :config
-  (use-package warnings
-    :config
-    (cl-pushnew '(yasnippet backquote-change)
-                warning-suppress-types
-                :test 'equal))
+;; ;; Yasnippet settings
+;; (use-package yasnippet
+;;   :ensure t
+;;   :hook ((LaTeX-mode . yas-minor-mode)
+;;          (post-self-insert . my/yas-try-expanding-auto-snippets))
+;;   :config
+;;   (use-package warnings
+;;     :config
+;;     (cl-pushnew '(yasnippet backquote-change)
+;;                 warning-suppress-types
+;;                 :test 'equal))
 
-  (setq yas-triggers-in-field t)
+;;   (setq yas-triggers-in-field t)
   
-  ;; Function that tries to autoexpand YaSnippets
-  ;; The double quoting is NOT a typo!
-  (defun my/yas-try-expanding-auto-snippets ()
-    (when (and (boundp 'yas-minor-mode) yas-minor-mode)
-      (let ((yas-buffer-local-condition ''(require-snippet-condition . auto)))
-        (yas-expand)))))
+;;   ;; Function that tries to autoexpand YaSnippets
+;;   ;; The double quoting is NOT a typo!
+;;   (defun my/yas-try-expanding-auto-snippets ()
+;;     (when (and (boundp 'yas-minor-mode) yas-minor-mode)
+;;       (let ((yas-buffer-local-condition ''(require-snippet-condition . auto)))
+;;         (yas-expand)))))
 
 ;; CDLatex integration with YaSnippet: Allow cdlatex tab to work inside Yas
 ;; fields
-(use-package cdlatex
-  :hook ((cdlatex-tab . yas-expand)
-         (cdlatex-tab . cdlatex-in-yas-field))
-  :config
-  (use-package yasnippet
-    :bind (:map yas-keymap
-           ("<tab>" . yas-next-field-or-cdlatex)
-           ("TAB" . yas-next-field-or-cdlatex))
-    :config
-    (defun cdlatex-in-yas-field ()
-      ;; Check if we're at the end of the Yas field
-      (when-let* ((_ (overlayp yas--active-field-overlay))
-                  (end (overlay-end yas--active-field-overlay)))
-        (if (>= (point) end)
-            ;; Call yas-next-field if cdlatex can't expand here
-            (let ((s (thing-at-point 'sexp)))
-              (unless (and s (assoc (substring-no-properties s)
-                                    cdlatex-command-alist-comb))
-                (yas-next-field-or-maybe-expand)
-                t))
-          ;; otherwise expand and jump to the correct location
-          (let (cdlatex-tab-hook minp)
-            (setq minp
-                  (min (save-excursion (cdlatex-tab)
-                                       (point))
-                       (overlay-end yas--active-field-overlay)))
-            (goto-char minp) t))))
+;; (use-package cdlatex
+;;   :hook ((cdlatex-tab . yas-expand)
+;;          (cdlatex-tab . cdlatex-in-yas-field))
+;;   :config
+;;   (use-package yasnippet
+;;     :bind (:map yas-keymap
+;;            ("<tab>" . yas-next-field-or-cdlatex)
+;;            ("TAB" . yas-next-field-or-cdlatex))
+;;     :config
+;;     (defun cdlatex-in-yas-field ()
+;;       ;; Check if we're at the end of the Yas field
+;;       (when-let* ((_ (overlayp yas--active-field-overlay))
+;;                   (end (overlay-end yas--active-field-overlay)))
+;;         (if (>= (point) end)
+;;             ;; Call yas-next-field if cdlatex can't expand here
+;;             (let ((s (thing-at-point 'sexp)))
+;;               (unless (and s (assoc (substring-no-properties s)
+;;                                     cdlatex-command-alist-comb))
+    ;;             (yas-next-field-or-maybe-expand)
+    ;;             t))
+    ;;       ;; otherwise expand and jump to the correct location
+    ;;       (let (cdlatex-tab-hook minp)
+    ;;         (setq minp
+    ;;               (min (save-excursion (cdlatex-tab)
+    ;;                                    (point))
+    ;;                    (overlay-end yas--active-field-overlay)))
+    ;;         (goto-char minp) t))))
 
-    (defun yas-next-field-or-cdlatex nil
-      (interactive)
-      "Jump to the next Yas field correctly with cdlatex active."
-      (if
-          (or (bound-and-true-p cdlatex-mode)
-              (bound-and-true-p org-cdlatex-mode))
-          (cdlatex-tab)
-        (yas-next-field-or-maybe-expand)))))
+    ;; (defun yas-next-field-or-cdlatex nil
+    ;;   (interactive)
+    ;;   "Jump to the next Yas field correctly with cdlatex active."
+    ;;   (if
+    ;;       (or (bound-and-true-p cdlatex-mode)
+    ;;           (bound-and-true-p org-cdlatex-mode))
+    ;;       (cdlatex-tab)
+    ;;     (yas-next-field-or-maybe-expand)))))
 
 
 
 ;; LaTeX fragment previews
-(plist-put org-format-latex-options :scale 2)
+;;(plist-put org-format-latex-options :scale 2)
 
 ;; BibTeX
 (use-package org-ref)
@@ -487,18 +526,18 @@
 (use-package marginalia)
 (use-package consult)
 
-(use-package citar
-  :bind (("C-c b" . citar-insert-citation)
-         :map minibuffer-local-map
-         ("M-b" . citar-insert-preset))
-  :custom
-  (citar-bibliography '("/mnt/bd9dc6ee-d251-406d-8dce-ea714434ee34/Bibliography/default.bib")))
+;; (use-package citar
+;;   :bind (("C-c b" . citar-insert-citation)
+;;          :map minibuffer-local-map
+;;          ("M-b" . citar-insert-preset))
+;;   :custom
+;;   (citar-bibliography '("/mnt/bd9dc6ee-d251-406d-8dce-ea714434ee34/Bibliography/default.bib")))
   
-(setq citar-symbols
-      `((file ,(all-the-icons-faicon "file-o" :face 'all-the-icons-green :v-adjust -0.1) . " ")
-        (note ,(all-the-icons-material "speaker_notes" :face 'all-the-icons-blue :v-adjust -0.3) . " ")
-        (link ,(all-the-icons-octicon "link" :face 'all-the-icons-orange :v-adjust 0.01) . " ")))
-(setq citar-symbol-separator "  ")
+;; (setq citar-symbols
+;;       `((file ,(all-the-icons-faicon "file-o" :face 'all-the-icons-green :v-adjust -0.1) . " ")
+;;         (note ,(all-the-icons-material "speaker_notes" :face 'all-the-icons-blue :v-adjust -0.3) . " ")
+;;         (link ,(all-the-icons-octicon "link" :face 'all-the-icons-orange :v-adjust 0.01) . " ")))
+;; (setq citar-symbol-separator "  ")
 
 
 (setq bibtex-completion-bibliography '(".bib"
@@ -532,55 +571,55 @@
 
 ;; Latex
 ;; from https://nasseralkmim.github.io/notes/2016/08/21/my-latex-environment/
-(use-package tex-site
-  :ensure auctex
-  :mode ("\\.tex\\'" . latex-mode)
-  :config
-  (setq TeX-auto-save t)
-  (setq TeX-parse-self t)
-  (setq-default TeX-master nil)
-  (add-hook 'LaTeX-mode-hook
-            (lambda ()
-              ;;(setq TeX-command-default "latexmk")
-              (rainbow-delimiters-mode)
-              (company-mode)
-              (smartparens-mode)
-              (turn-on-reftex)
-              (setq reftex-plug-into-AUCTeX t)
-              (reftex-isearch-minor-mode)
-              (setq TeX-PDF-mode t)
-              (setq TeX-source-correlate-method 'synctex)
-              (setq TeX-source-correlate-start-server t)))
+;; (use-package tex-site
+;;   :ensure auctex
+;;   :mode ("\\.tex\\'" . latex-mode)
+;;   :config
+;;   (setq TeX-auto-save t)
+;;   (setq TeX-parse-self t)
+;;   (setq-default TeX-master nil)
+;;   (add-hook 'LaTeX-mode-hook
+;;             (lambda ()
+;;               ;;(setq TeX-command-default "latexmk")
+;;               (rainbow-delimiters-mode)
+;;               (company-mode)
+;;               (smartparens-mode)
+;;               (turn-on-reftex)
+;;               (setq reftex-plug-into-AUCTeX t)
+;;               (reftex-isearch-minor-mode)
+;;               (setq TeX-PDF-mode t)
+;;               (setq TeX-source-correlate-method 'synctex)
+;;               (setq TeX-source-correlate-start-server t)))
 
   ;; Update PDF buffers after successful LaTeX runs
-  (add-hook 'TeX-after-TeX-LaTeX-command-finished-hook
-            #'TeX-revert-document-buffer)
+  ;; (add-hook 'TeX-after-TeX-LaTeX-command-finished-hook
+  ;;           #'TeX-revert-document-buffer)
 
-  ;; to use pdfview with auctex
-  (add-hook 'LaTeX-mode-hook 'pdf-tools-install)
+  ;; ;; to use pdfview with auctex
+  ;; (add-hook 'LaTeX-mode-hook 'pdf-tools-install)
 
-  ;; to use pdfview with auctex
-  (setq TeX-view-program-selection '((output-pdf "pdf-tools"))
-        TeX-source-correlate-start-server t)
-  (setq TeX-view-program-list '(("pdf-tools" "TeX-pdf-tools-sync-view"))))
+  ;; ;; to use pdfview with auctex
+  ;; (setq TeX-view-program-selection '((output-pdf "pdf-tools"))
+  ;;       TeX-source-correlate-start-server t)
+  ;; (setq TeX-view-program-list '(("pdf-tools" "TeX-pdf-tools-sync-view"))))
 
 ;; eaf
-(use-package eaf
-  :load-path "~/emacs/emacs-application-framework"
-  :init
-  (use-package epc :defer t :ensure t)
-  (use-package ctable :defer t :ensure t)
-  (use-package deferred :defer t :ensure t)
-  (use-package s :defer t :ensure t)
-  :custom
-  (eaf-browser-continue-where-left-off t)
-  :config
-  ;(eaf-setq eaf-browser-enable-adblocker "true")
-  ;(eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
-  ;(eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
-  ;(eaf-bind-key take_photo "p" eaf-camera-keybinding)
-  ;(eaf-bind-key nil "M-q" eaf-browser-keybinding)
-  )
+;; (use-package eaf
+;;   :load-path "~/emacs/emacs-application-framework"
+;;   :init
+;;   (use-package epc :defer t :ensure t)
+;;   (use-package ctable :defer t :ensure t)
+;;   (use-package deferred :defer t :ensure t)
+;;   (use-package s :defer t :ensure t)
+;;   :custom
+;;   (eaf-browser-continue-where-left-off t)
+;;   :config
+;;   ;(eaf-setq eaf-browser-enable-adblocker "true")
+;;   ;(eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
+;;   ;(eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
+;;   ;(eaf-bind-key take_photo "p" eaf-camera-keybinding)
+;;   ;(eaf-bind-key nil "M-q" eaf-browser-keybinding)
+;;   )
 ;;(require 'eaf)
 ;;(require 'eaf-mindmap)
 
