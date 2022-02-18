@@ -8,10 +8,10 @@
  (rear-context-string . "er. The VNC serv")
  (position . 575))
 ("org-capture-last-stored"
- (filename . "/mnt/bd9dc6ee-d251-406d-8dce-ea714434ee34/Notes/Org/20220215173807-vnc_security.org")
- (front-context-string . "\nA GUI viewed on")
- (rear-context-string . "e: vnc-security\n")
- (position . 90))
+ (filename . "/mnt/bd9dc6ee-d251-406d-8dce-ea714434ee34/Notes/Org/20220216223916-dmitry_valeryevich_utkin.org")
+ (front-context-string . "\nAccording to SP")
+ (rear-context-string . "leryevich Utkin\n")
+ (position . 206))
 ("default.bib"
  (filename . "/mnt/bd9dc6ee-d251-406d-8dce-ea714434ee34/Bibliography/default.bib")
  (front-context-string . "\n@article{Hauter")

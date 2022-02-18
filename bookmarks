@@ -8,10 +8,10 @@
  (rear-context-string . "er. The VNC serv")
  (position . 575))
 ("org-capture-last-stored"
- (filename . "/mnt/bd9dc6ee-d251-406d-8dce-ea714434ee34/Notes/Org/20220216223916-dmitry_valeryevich_utkin.org")
- (front-context-string . "\nAccording to SP")
- (rear-context-string . "leryevich Utkin\n")
- (position . 206))
+ (filename . "/mnt/bd9dc6ee-d251-406d-8dce-ea714434ee34/Notes/Org/ubuntu20_04_ssh_hardening.org")
+ (front-context-string)
+ (rear-context-string . "4 SSH Hardening\n")
+ (position . 103))
 ("default.bib"
  (filename . "/mnt/bd9dc6ee-d251-406d-8dce-ea714434ee34/Bibliography/default.bib")
  (front-context-string . "\n@article{Hauter")

@@ -177,7 +177,7 @@
 
 ;; Theme
 (use-package doom-themes
-  :config (load-theme 'doom-nord t))
+  :config (load-theme 'doom-tokyo-night t))
 
 
 ;; icons
@@ -196,7 +196,14 @@
 
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
-  :custom ((doom-modeline-height 15)))
+  :custom ((doom-modeline-height 25)
+	   (doom-modeline-bar-width 4)))
+
+(setq doom-modeline-icon (display-graphic-p))
+(setq doom-modeline-major-mode-icon t)
+(setq doom-modeline-major-mode-color-icon t)
+(setq doom-modeline-buffer-state-icon t)
+(setq doom-modeline-buffer-modification-icon t)
 
 
 ;; Web
@@ -218,8 +225,8 @@
 ;; dashboard
 (use-package dashboard
   :init
-  ;;(setq dashboard-set-heading-icons t)
-  ;;(setq dashboard-set-file-icons t)
+  (setq dashboard-set-heading-icons t)
+  (setq dashboard-set-file-icons t)
   (setq dashboard-banner-logo-title "Welcome to UnMary Emacs!")
   ;;(setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
   (setq dashboard-startup-banner "~/.emacs.d/halfunmary.png")  ;; use custom image as banner
@@ -236,17 +243,17 @@
 (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
 
 ;; Parrot
-;; (defun my/parrot-animate-when-compile-success (buffer result)
-;;   (if (string-match "^finished" result)
-;;       (parrot-start-animation)))
+(defun my/parrot-animate-when-compile-success (buffer result)
+  (if (string-match "^finished" result)
+      (parrot-start-animation)))
 
-;; (use-package parrot
-;;   :ensure t
-;;   :config
-;;   (parrot-mode)
-;;   (parrot-set-parrot-type 'thumbsup)
-;;   (add-hook 'before-save-hook 'parrot-start-animation)
-;;   (add-to-list 'compilation-finish-functions 'my/parrot-animate-when-compile-success))
+(use-package parrot
+  :ensure t
+  :config
+  (parrot-mode)
+  (parrot-set-parrot-type 'thumbsup)
+  (add-hook 'before-save-hook 'parrot-start-animation)
+  (add-to-list 'compilation-finish-functions 'my/parrot-animate-when-compile-success))
 
 
 ;; delimiters
@@ -287,6 +294,8 @@
      :map helm-map
      ("C-z" . helm-select-action)
      ("<tab>" . helm-execute-persistent-action)))
+
+(use-package helm-wikipedia)
 
 
 ;; Auto complete
@@ -378,9 +387,14 @@
   :bind
   ((("C-c n l" . org-roam-buffer-toggle)
     ("C-c n f" . org-roam-node-find)
+    ("C-c n r" . org-roam-ref-add)
+    ("C-c n o" . org-id-get-create)
+    ("C-c n t" . org-roam-tag-add)
+    ("C-c n a" . org-roam-alias-add)
     ("C-c n g" . org-roam-graph)
     ("C-c n i" . org-roam-node-insert)
     ("C-c n I" . org-roam-insert-immediate))))
+
 
 (use-package org-roam-ui
   :after org-roam
@@ -399,7 +413,56 @@
                (window-width . 0.23)
                (window-height . fit-window-to-buffer)))
 
+(org-roam-db-autosync-mode)
 
+(setq org-roam-mode-section-functions
+      (list #'org-roam-backlinks-section
+	    #'org-roam-reflinks-section
+	    #'org-roam-unlinked-references-section))
+
+(setq org-roam-completion-everywhere t)
+
+(setq org-roam-capture-templates
+      '(("m" "main" plain
+	 "%?"
+	 :if-new (file+head "${slug}.org"
+			    "#+title: ${title}\n")
+	 :immediate-finish t
+	 :unnarrowed t)
+	("c" "card" plain "%?"
+	 :if-new (file+head "${slug}.org"
+			    "#+title: ${title}\n#+filetags: \n\n* ${title}\n")
+	 :unnarrowed t)
+	("d" "default" plain "%?"
+	 :target
+	 (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+		    "#+title: ${title}\n#+date: <%Y%m%d-%H%M>\n#+filetags: \n")
+	 :immediate-finish t)
+	("a" "article" plain "%?"
+	 :if-new
+	 (file+head "${title}.org" "#+title: ${title}\n#+filetags: :article:readlater:\n")
+	 :immediate-finish t
+	 :unnarrowed t))
+      time-stamp-start "#\\+lastmod: [\t]*")
+
+(cl-defmethod org-roam-node-type ((node org-roam-node))
+  "Return the TYPE of NODE."
+  (condition-case nil
+      (file-name-nondirectory
+       (directory-file-name
+        (file-name-directory
+         (file-relative-name (org-roam-node-file node) org-roam-directory))))
+    (error "")))
+
+(setq org-roam-node-display-template
+      (concat "${type:15} ${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+
+(use-package vulpea
+  :ensure t
+  ;; hook into org-roam-db-autosync-mode you wish to enable
+  ;; persistence of meta values (see respective section in README to
+  ;; find out what meta means)
+  :hook ((org-roam-db-autosync-mode . vulpea-db-autosync-enable)))
 
 
 ;; LaTeX (karthink)
@@ -622,6 +685,130 @@
 ;;   )
 ;;(require 'eaf)
 ;;(require 'eaf-mindmap)
+
+(use-package google-translate)
+(setq google-translate-default-source-language "auto")
+(setq google-translate-default-target-language "en")
+
+(use-package wiki-summary)
+(use-package define-it)
+(setq define-it-output-choice 'pop)
+
+(use-package wikinforg
+  :ensure t)
+
+
+;; Search Engines
+(use-package engine-mode)
+(engine-mode t)
+(setq engine/browser-function 'eww-browse-url)
+(engine/set-keymap-prefix (kbd "C-c s"))
+
+(defengine github
+  "https://github.com/search?ref=simplesearch&q=%s")
+(defengine ctan
+  "http://www.ctan.org/search/?x=1&PORTAL=on&phrase=%s"
+  :docstring "Search the Comprehensive TeX Archive Network (ctan.org)")
+(defengine google
+  "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"
+  :keybinding "g")
+(defengine google-images
+  "http://www.google.com/images?hl=en&source=hp&biw=1440&bih=795&gbv=2&aq=f&aqi=&aql=&oq=&q=%s")
+(defengine google-maps
+  "http://maps.google.com/maps?q=%s"
+  :docstring "Mapssss")
+(defengine project-gutenberg
+  "http://www.gutenberg.org/ebooks/search/?query=%s")
+(defengine rfcs
+  "http://pretty-rfc.herokuapp.com/search?q=%s")
+(defengine stack-overflow
+  "https://stackoverflow.com/search?q=%s")
+(defengine twitter
+  "https://twitter.com/search?q=%s")
+(defengine wikipedia
+  "http://www.wikipedia.org/search-redirect.php?language=en&go=Go&search=%s"
+  :keybinding "w")
+(defengine wiktionary
+  "https://www.wikipedia.org/search-redirect.php?family=wiktionary&language=en&go=Go&search=%s")
+(defengine wolfram-alpha
+  "http://www.wolframalpha.com/input/?i=%s")
+(defengine youtube
+  "http://www.youtube.com/results?aq=f&oq=&search_query=%s")
+(defengine seasoned-advice
+  "https://cooking.stackexchange.com/search?q=%s")
+(defengine mathematics
+  "https://math.stackexchange.com/search?q=%s")
+(defengine englang
+  "https://english.stackexchange.com/search?q=%s")
+(defengine linux
+  "https://unix.stackexchange.com/search?q=%s")
+(defengine infosec
+  "https://security.stackexchange.com/search?q=%s")
+(defengine cryptography
+  "https://crypto.stackexchange.com/search?q=%s")
+(defengine history
+  "https://history.stackexchange.com/search?q=%s")
+(defengine mathoverflow
+  "https://mathoverflow.net/search?q=%s")
+(defengine emacs
+  "https://emacs.stackexchange.com/search?q=%s")
+(defengine law
+  "https://law.stackexchange.com/search?q=%s")
+(defengine politics
+  "https://politics.stackexchange.com/search?q=%s")
+(defengine tcs
+  "https://cstheory.stackexchange.com/search?q=%s")
+(defengine merck
+  "https://www.merckmanuals.com/professional/SearchResults?query=%s")
+(defengine rosettacode
+  "http://rosettacode.org/mw/index.php?title=Special%3ASearch&search=%s")
+(defengine arxiv
+  "https://arxiv.org/search/?query=%s")
+(defengine citeseerx
+  "https://citeseerx.ist.psu.edu/search?q=%s")
+(defengine dblp
+  "https://dblp.org/search?q=%s")
+(defengine semanticscholar
+  "https://www.semanticscholar.org/search?q=%s")
+(defengine worldcat
+  "https://www.worldcat.org/search?q=%s")
+(defengine scholarpedia
+  "http://www.scholarpedia.org/w/index.php?search=%s")
+(defengine mathency
+  "https://encyclopediaofmath.org/index.php?title=Special%3ASearch&search=%s")
+(defengine mathworld
+  "https://mathworld.wolfram.com/search/?query=%s")
+(defengine oeis
+  "https://oeis.org/search?q=%s")
+(defengine nlab
+  "https://www.google.com/search?as_q=%s&as_sitesearch=https%3A%2F%2Fncatlab.org%2Fnlab%2F")
+(defengine sep
+  "https://plato.stanford.edu/search/searcher.py?query=%s")
+(defengine ballotpedia
+  "https://ballotpedia.org/wiki/index.php?search=%s")
+(defengine foldoc
+  "https://foldoc.org/%s")
+(defengine etymolonline
+  "https://www.etymonline.com/search?q=%s")
+(defengine jurispedia
+  "http://www.jurispedia.org/index2.php?cof=FORID%3A11&ie=UTF-8&q=%s")
+(defengine wikibooks
+  "https://en.wikibooks.org/wiki/Special:Search?search=%s")
+(defengine wikidata
+  "https://www.wikidata.org/w/index.php?search=sseech&search=%s")
+(defengine wikicommons
+  "https://commons.wikimedia.org/w/index.php?search=%s")
+(defengine wikinews
+  "https://en.wikinews.org/wiki/Special:Search?search=%s")
+(defengine wikiquote
+  "https://en.wikiquote.org/wiki/Special:Search?search=%s")
+(defengine wikisource
+  "https://wikisource.org/w/index.php?search=%s")
+(defengine wikiversity
+  "https://en.wikiversity.org/wiki/Special:Search?search=%s")
+(defengine wikitionary
+  "https://en.wiktionary.org/wiki/Special:Search?search=%s")
+
 
 (message "Init Loaded!")
 (provide 'init)
