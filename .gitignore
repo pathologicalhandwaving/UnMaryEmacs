@@ -1,0 +1,14 @@
+session.*
+*.elc
+transient/*
+straight/*
+quelpa/*
+plugins/*
+elpa/*
+backups/*
+auto-save-list/*
+recentf
+places
+bookmarks
+.org-id-locations
+org-roam.db
