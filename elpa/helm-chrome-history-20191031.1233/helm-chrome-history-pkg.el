@@ -1,2 +1,0 @@
-;;; Generated package description from helm-chrome-history.el  -*- no-byte-compile: t -*-
-(define-package "helm-chrome-history" "20191031.1233" "Browse Chrome History with Helm" '((emacs "25.1") (helm-core "3.0")) :commit "f9002d4c12df65a99830376b126dbbeae3ef2148" :authors '(("Xu Chunyang" . "mail@xuchunyang.me")) :maintainer '("Xu Chunyang" . "mail@xuchunyang.me") :keywords '("tools") :url "https://github.com/xuchunyang/helm-chrome-history")

@@ -1,1 +1,0 @@
-/home/unmary/.emacs.d/straight/repos/org/lisp/ox-beamer.el

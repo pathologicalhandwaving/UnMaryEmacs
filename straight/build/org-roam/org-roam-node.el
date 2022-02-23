@@ -1,1 +1,0 @@
-/home/unmary/.emacs.d/straight/repos/org-roam/org-roam-node.el

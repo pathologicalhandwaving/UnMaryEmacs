@@ -1,2 +1,0 @@
-;;; Generated package description from wikinfo.el  -*- no-byte-compile: t -*-
-(define-package "wikinfo" "20220121.2017" "Scrape Wikipedia Infoboxes" '((emacs "27.1")) :commit "b149228023d4abb29555ce69877df521887cafe9" :authors '(("Nicholas Vollmer" . "progfolio@protonmail.com")) :maintainer '("Nicholas Vollmer" . "progfolio@protonmail.com") :keywords '("org" "convenience") :url "https://github.com/progfolio/wikinfo")

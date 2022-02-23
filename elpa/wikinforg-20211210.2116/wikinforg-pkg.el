@@ -1,2 +1,0 @@
-;;; Generated package description from wikinforg.el  -*- no-byte-compile: t -*-
-(define-package "wikinforg" "20211210.2116" "Org-mode wikinfo integration" '((emacs "27.1") (wikinfo "0.0.0") (org "9.3")) :commit "62842806fee863eb43c3015c3d86f5a7f0bf858f" :authors '(("Nicholas Vollmer" . "progfolio@protonmail.com")) :maintainer '("Nicholas Vollmer" . "progfolio@protonmail.com") :keywords '("org" "convenience") :url "https://github.com/progfolio/wikinforg")
