@@ -137,7 +137,6 @@
 (dolist (mode '(org-mode-hook
 		org-agenda-mode-hook
                 term-mode-hook
-                side-notes-toggle-notes
                 shell-mode-hook
                 eshell-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
@@ -177,7 +176,7 @@
 
 ;; Theme
 (use-package doom-themes
-  :config (load-theme 'doom-tokyo-night t))
+  :config (load-theme 'doom-nord t))
 
 
 ;; icons
@@ -322,17 +321,17 @@
   (("C-c l" . org-store-link)
    ("C-c c" . org-capture)))
 
-(require 'org-protocol)
+;;(require 'org-protocol)
 ;; Startup
 (setq org-startup-indented t
-      org-pretty-entities t
+      org-pretty-entities nil
       org-hide-emphasis-markers t
       org-startup-with-inline-images t
       org-image-actual-width '(300))
 
 ;; Show hidden emphasis markers
-(use-package org-appear
-  :hook (org-mode . org-appear-mode))
+;; (use-package org-appear
+;;   :hook (org-mode . org-appear-mode))
 
 ;; Bullets
 (use-package org-superstar
@@ -340,6 +339,8 @@
     (setq org-superstar-special-todo-items t)
     (add-hook 'org-mode-hook (lambda ()
                                (org-superstar-mode 1))))
+(setq org-superstar-headline-bullets-list
+      '("◉" ("🞛" ?◈) "○" "▷"))
 
 (setq org-src-fontify-natively t)
 (setq org-src-tab-acts-natively t)
@@ -350,20 +351,10 @@
 (setq-default line-spacing 6)
 
 
-;; Writing Tools
-(use-package academic-phrases :ensure t)
 
-(use-package synosaurus
-  :diminish synosaurus-mode
-  :init    (synosaurus-mode)
-  :config  (setq synosaurus-choose-method 'popup) ;; 'ido is default.
-  (global-set-key (kbd "M-#") 'synosaurus-choose-and-replace))
 
-(use-package wordnut
-  :bind ("M-!" . wordnut-lookup-current-word))
-
-(use-package org-sidebar
-  :quelpa (org-sidebar :fetcher github :repo "alphapapa/org-sidebar"))
+;; (use-package org-sidebar
+;;   :quelpa (org-sidebar :fetcher github :repo "alphapapa/org-sidebar"))
 
 
 ;; quickref
@@ -376,24 +367,21 @@
 
 ;; org-roam
 (use-package org-roam
-;;    :hook
-;;  (after-init . org-roam-mode)
-  :config
-  (require 'org-roam-protocol)
+  :ensure t
   :init
   (setq org-roam-v2-ack t)
   :custom
   (org-roam-directory "/mnt/bd9dc6ee-d251-406d-8dce-ea714434ee34/Notes/Org")
+  (org-roam-completion-everywhere t)
   :bind
   ((("C-c n l" . org-roam-buffer-toggle)
     ("C-c n f" . org-roam-node-find)
     ("C-c n r" . org-roam-ref-add)
-    ("C-c n o" . org-id-get-create)
     ("C-c n t" . org-roam-tag-add)
-    ("C-c n a" . org-roam-alias-add)
-    ("C-c n g" . org-roam-graph)
     ("C-c n i" . org-roam-node-insert)
-    ("C-c n I" . org-roam-insert-immediate))))
+    ("C-c n I" . org-roam-insert-immediate)))
+  :config
+  (org-roam-setup))
 
 
 (use-package org-roam-ui
@@ -404,65 +392,78 @@
         org-roam-ui-update-on-save t
         org-roam-ui-open-on-start t))
 
-;; for org-roam-buffer-toggle
-;; Recommendation in the official manual
+;; ;; for org-roam-buffer-toggle
+;; ;; Recommendation in the official manual
 (add-to-list 'display-buffer-alist
 	     '("\\*org-roam\\*"
-               (display-buffer-in-direction)
+	       (display-buffer-in-direction)
                (direction . right)
-               (window-width . 0.23)
-               (window-height . fit-window-to-buffer)))
+               (window-width . 0.25)
+               (window-height . 0.50)))
 
-(org-roam-db-autosync-mode)
+;; (org-roam-db-autosync-mode)
 
 (setq org-roam-mode-section-functions
       (list #'org-roam-backlinks-section
-	    #'org-roam-reflinks-section
-	    #'org-roam-unlinked-references-section))
-
-(setq org-roam-completion-everywhere t)
+ 	    #'org-roam-reflinks-section))
 
 (setq org-roam-capture-templates
-      '(("m" "main" plain
-	 "%?"
-	 :if-new (file+head "${slug}.org"
-			    "#+title: ${title}\n")
-	 :immediate-finish t
+      '(("d" "default" plain "%?"
+	 :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+			    "#+title: ${title}\n#+category: %?\n#+filetags: \n\n* ${title}\n")
 	 :unnarrowed t)
-	("c" "card" plain "%?"
-	 :if-new (file+head "${slug}.org"
-			    "#+title: ${title}\n#+filetags: \n\n* ${title}\n")
+	("w" "work" plain
+	 :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+			    "#+title: ${title}\n#+category: Work\n#+filetags: :work:\n\n* ${title}\n%?")
 	 :unnarrowed t)
-	("d" "default" plain "%?"
-	 :target
-	 (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
-		    "#+title: ${title}\n#+date: <%Y%m%d-%H%M>\n#+filetags: \n")
-	 :immediate-finish t)
-	("a" "article" plain "%?"
-	 :if-new
-	 (file+head "${title}.org" "#+title: ${title}\n#+filetags: :article:readlater:\n")
-	 :immediate-finish t
-	 :unnarrowed t))
-      time-stamp-start "#\\+lastmod: [\t]*")
+	("t" "term" plain
+	 :if-new (file+head  "%<%Y%m%d%H%M%S>-${slug}.org"
+			     "#+title: ${title}\n#+category: Dictionary\n#+filetags: :dictionary:\n\n* ${title}\n%?")
+	 :unnarrowed t)))
 
-(cl-defmethod org-roam-node-type ((node org-roam-node))
-  "Return the TYPE of NODE."
-  (condition-case nil
-      (file-name-nondirectory
-       (directory-file-name
-        (file-name-directory
-         (file-relative-name (org-roam-node-file node) org-roam-directory))))
-    (error "")))
+;; (setq org-roam-capture-templates
+;;       '(("m" "main" plain
+;; 	 "%?"
+;; 	 :if-new (file+head "${slug}.org"
+;; 			    "#+title: ${title}\n")
+;; 	 :immediate-finish t
+;; 	 :unnarrowed t)
+;; 	("c" "card" plain "%?"
+;; 	 :if-new (file+head "${slug}.org"
+;; 			    "#+title: ${title}\n#+filetags: \n\n* ${title}\n")
+;; 	 :unnarrowed t)
+;; 	("d" "default" plain "%?"
+;; 	 :target
+;; 	 (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+;; 		    "#+title: ${title}\n#+date: <%Y%m%d-%H%M>\n#+filetags: \n")
+;; 	 :immediate-finish t)
+;; 	("a" "article" plain "%?"
+;; 	 :if-new
+;; 	 (file+head "${title}.org" "#+title: ${title}\n#+filetags: :article:readlater:\n")
+;; 	 :immediate-finish t
+;; 	 :unnarrowed t))
+;       time-stamp-start "#\\+lastmod: [\t]*")
 
-(setq org-roam-node-display-template
-      (concat "${type:15} ${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+;; (cl-defmethod org-roam-node-type ((node org-roam-node))
+;;   "Return the TYPE of NODE."
+;;   (condition-case nil
+;;       (file-name-nondirectory
+;;        (directory-file-name
+;;         (file-name-directory
+;;          (file-relative-name (org-roam-node-file node) org-roam-directory))))
+;;     (error "")))
 
-(use-package vulpea
-  :ensure t
-  ;; hook into org-roam-db-autosync-mode you wish to enable
-  ;; persistence of meta values (see respective section in README to
-  ;; find out what meta means)
-  :hook ((org-roam-db-autosync-mode . vulpea-db-autosync-enable)))
+;; (setq org-roam-node-display-template
+;;       (concat "${type:15} ${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+;; (setq org-roam-node-display-template
+;;       (concat "${title:*} "
+;;               (propertize "${tags:10}" 'face 'org-tag)))
+;; (use-package vulpea
+;;   :ensure t
+;;   ;; hook into org-roam-db-autosync-mode you wish to enable
+;;   ;; persistence of meta values (see respective section in README to
+;;   ;; find out what meta means)
+;;   :hook ((org-roam-db-autosync-mode . vulpea-db-autosync-enable)))
 
 
 ;; LaTeX (karthink)
@@ -572,16 +573,16 @@
 (use-package bibtex)
 (require 'bibtex)
 
-(setq bibtex-autokey-year-length 4
-	bibtex-autokey-name-year-separator "-"
-	bibtex-autokey-year-title-separator "-"
-	bibtex-autokey-titleword-separator "-"
-	bibtex-autokey-titlewords 2
-	bibtex-autokey-titlewords-stretch 1
-	bibtex-autokey-titleword-length 5
-	org-ref-bibtex-hydra-key-binding (kbd "H-b"))
+;; (setq bibtex-autokey-year-length 4
+;; 	bibtex-autokey-name-year-separator "-"
+;; 	bibtex-autokey-year-title-separator "-"
+;; 	bibtex-autokey-titleword-separator "-"
+;; 	bibtex-autokey-titlewords 2
+;; 	bibtex-autokey-titlewords-stretch 1
+;; 	bibtex-autokey-titleword-length 5
+;; 	org-ref-bibtex-hydra-key-binding (kbd "H-b"))
 
-(define-key bibtex-mode-map (kbd "H-b") 'org-ref-bibtex-hydra/body)
+;; (define-key bibtex-mode-map (kbd "H-b") 'org-ref-bibtex-hydra/body)
 
 ;;(use-package vertico)
 (use-package orderless)
@@ -603,23 +604,23 @@
 ;; (setq citar-symbol-separator "  ")
 
 
-(setq bibtex-completion-bibliography '(".bib"
-					 "/mnt/bd9dc6ee-d251-406d-8dce-ea714434ee34/Bibliography/default.bib")
-	bibtex-completion-library-path '("/mnt/bd9dc6ee-d251-406d-8dce-ea714434ee34/Books/PDFs")
-	bibtex-completion-notes-path "/mnt/bd9dc6ee-d251-406d-8dce-ea714434ee34/Notes"
-	bibtex-completion-notes-template-multiple-files "* ${author-or-editor}, ${title}, ${journal}, (${year}) :${=type=}: \n\nSee [[cite:&${=key=}]]\n"
+;; (setq bibtex-completion-bibliography '(".bib"
+;; 					 "/mnt/bd9dc6ee-d251-406d-8dce-ea714434ee34/Bibliography/default.bib")
+;; 	bibtex-completion-library-path '("/mnt/bd9dc6ee-d251-406d-8dce-ea714434ee34/Books/PDFs")
+;; 	bibtex-completion-notes-path "/mnt/bd9dc6ee-d251-406d-8dce-ea714434ee34/Notes"
+;; 	bibtex-completion-notes-template-multiple-files "* ${author-or-editor}, ${title}, ${journal}, (${year}) :${=type=}: \n\nSee [[cite:&${=key=}]]\n"
 
-	bibtex-completion-additional-search-fields '(keywords)
-	bibtex-completion-display-formats
-	'((article       . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${journal:40}")
-	  (inbook        . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} Chapter ${chapter:32}")
-	  (incollection  . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
-	  (inproceedings . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
-	  (t             . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*}"))
-	bibtex-completion-pdf-open-function
-	(lambda (fpath)
-	  (call-process "open" nil 0 nil fpath)))
-(define-key org-mode-map (kbd "C-c ]") 'org-ref-insert-link)
+;; 	bibtex-completion-additional-search-fields '(keywords)
+;; 	bibtex-completion-display-formats
+;; 	'((article       . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${journal:40}")
+;; 	  (inbook        . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} Chapter ${chapter:32}")
+;; 	  (incollection  . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
+;; 	  (inproceedings . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
+;; 	  (t             . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*}"))
+;; 	bibtex-completion-pdf-open-function
+;; 	(lambda (fpath)
+;; 	  (call-process "open" nil 0 nil fpath)))
+;; (define-key org-mode-map (kbd "C-c ]") 'org-ref-insert-link)
 
 ;; PDFs
 (use-package pdf-tools
@@ -686,6 +687,19 @@
 ;;(require 'eaf)
 ;;(require 'eaf-mindmap)
 
+
+;; Writing Tools
+(use-package academic-phrases :ensure t)
+
+(use-package synosaurus
+  :diminish synosaurus-mode
+  :init    (synosaurus-mode)
+  :config  (setq synosaurus-choose-method 'popup) ;; 'ido is default.
+  (global-set-key (kbd "M-#") 'synosaurus-choose-and-replace))
+
+(use-package wordnut
+  :bind ("M-!" . wordnut-lookup-current-word))
+
 (use-package google-translate)
 (setq google-translate-default-source-language "auto")
 (setq google-translate-default-target-language "en")
@@ -701,8 +715,7 @@
 ;; Search Engines
 (use-package engine-mode)
 (engine-mode t)
-(setq engine/browser-function 'eww-browse-url)
-(engine/set-keymap-prefix (kbd "C-c s"))
+;;(setq engine/browser-function 'eww-browse-url)
 
 (defengine github
   "https://github.com/search?ref=simplesearch&q=%s")

@@ -2,16 +2,11 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("Linode-VNC"
- (filename . "/mnt/bd9dc6ee-d251-406d-8dce-ea714434ee34/Notes/Mobile/An Overview of VNC (Virtual Network Computing).md")
- (front-context-string . "er is the comput")
- (rear-context-string . "er. The VNC serv")
- (position . 575))
-("org-capture-last-stored"
- (filename . "/mnt/bd9dc6ee-d251-406d-8dce-ea714434ee34/Notes/Org/ubuntu20_04_ssh_hardening.org")
+(("org-capture-last-stored"
+ (filename . "/mnt/bd9dc6ee-d251-406d-8dce-ea714434ee34/Notes/Org/20220621174023-wordpress.org")
  (front-context-string)
- (rear-context-string . "4 SSH Hardening\n")
- (position . 103))
+ (rear-context-string . "press:research:\n")
+ (position . 151))
 ("default.bib"
  (filename . "/mnt/bd9dc6ee-d251-406d-8dce-ea714434ee34/Bibliography/default.bib")
  (front-context-string . "\n@article{Hauter")
